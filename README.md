@@ -1,6 +1,6 @@
 # B站 CDN 选择器（BilibiliCDNSearcher）
 
-一个基于现代 Xposed API（libxposed API 101/102）的模块：在当前网络下搜索、测速哔哩哔哩视频 CDN 节点，并让 B 站客户端改用你选定的节点。
+一个基于 libxposed API 101/102 的Vibe Coding小垃圾：在当前网络下搜索、测速哔哩哔哩视频 CDN 节点，并让 B 站客户端改用你选定的节点。
 
 ## 功能
 
@@ -12,7 +12,6 @@
 ## 工作原理
 
 - **hook 点**：`tv.danmaku.ijk.media.player.IjkMediaAsset$MediaAssertSegment$Builder` 的构造函数 `(String url, int)` 和 `setBackupUrls(Collection)`。播放器在这里拿到每个分片的主地址和备用地址，模块把主地址换成选定节点，原地址全部保留为备用，选定节点不可用时播放器会自动回落。
-- **为什么能换域名**：upos 地址的签名（`upsig`）不含域名，同一条地址可以在各镜像和自建节点间通用。akamai 节点还要校验 `hdnts` 令牌，选 akamai 时会优先用带令牌的那条地址做源。PCDN 地址的路径和签名规则不同，不能直接换域名。
 - **测速样本**：模块 App 调用网页版播放接口（无需登录）取一条公开视频的分片地址，把域名换成各个节点后用 Range 请求下载。
 - **只处理点播**：直播流（`live-bvc` / gotcha）不改动。
 
@@ -20,11 +19,11 @@
 
 ## 使用要求
 
-- 已 root，并安装支持 **libxposed API 101 及以上**的 LSPosed。LSPosed 团队的新版本（2.x）发布在其 Telegram 频道；已在 LSPosed v2.2.1（7912，API 102）上确认能识别、启用本模块并连上框架服务。GitHub 上的 LSPosed 1.9.2 不支持这套 API。
+- 已 root，并安装支持 **libxposed API 101 及以上**的 LSPosed。已在 LSPosed v2.2.1（7912，API 102）上确认能识别、启用本模块并连上框架服务。
+- 理论上支持任意支持 **libxposed API 101 及以上**的实现，未测试。
 - 框架需支持远程配置（`PROP_CAP_REMOTE`），否则选择无法下发到 B 站进程。
-- 模块必须装在内部存储。如果手机开了开发者选项“强制允许将应用写入外部存储”并插了 SD 卡（adoptable storage），系统会无视清单里的 `internalOnly` 把模块装到 SD 卡，LSPosed 就识别不到。此时执行 `adb shell pm move-package io.github.mhyho.bilicdn internal`。
-- Android 8.0（API 26）及以上。
-- 作用域：`tv.danmaku.bili`（国内版）、`com.bilibili.app.blue`（概念版）、`tv.danmaku.bilibilihd`（HD）、`com.bilibili.app.in`（国际版）。
+- 理论上支持Android 8.0（API 26）及以上，仅测试过Android 13（WSA版本）与Android 17。
+- 作用域（理论）：`tv.danmaku.bili`（国内版）、`com.bilibili.app.blue`（概念版）、`tv.danmaku.bilibilihd`（HD）、`com.bilibili.app.in`（国际版），仅测试过国内版与白色国际版。
 
 ## 使用步骤
 
@@ -43,14 +42,12 @@ $env:JAVA_HOME = "C:\Program Files\Java\jdk-25.0.3"
 .\gradlew.bat testDebugUnitTest assembleRelease
 ```
 
-产物在 `app/build/outputs/apk/`。release 目前用 debug 签名，仅供自用。
+产物位于 `app/build/outputs/apk/`。release 目前用 debug 签名，仅供自用。
 
 ## 验证情况
 
 - hook 的类名、方法签名、字段名（`target`、`url`）已用 dexdump 核对：国内版 9.16.1（2026-10-22 官方包）、国际版 `com.bilibili.app.in` 3.20.4。
-- 节点换域名、测速逻辑已在桌面网络上实测：upos 镜像、`cn-hk-eq`、`cn-bj-fx` 等节点可用，部分节点（如 `mirror08c`）已无法解析。
-- 模块 App 界面已在 WSA 上验证（WSA 无 Xposed 框架，也无外网）。
-- **尚未在装有框架的真机上验证 hook 实际生效**。如果 B 站更新后不生效，先在框架日志里搜 `BiliCDN`。
+- 节点换域名、测速逻辑已实测：upos 镜像、`cn-hk-eq`、`cn-bj-fx` 等节点可用，部分节点（如 `mirror08c`）已无法解析。
 
 ## 数据来源与致谢
 
