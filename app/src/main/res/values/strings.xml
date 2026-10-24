@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">B站 CDN 选择器</string>
+    <string name="xposed_description">搜索、测速并指定哔哩哔哩客户端的视频 CDN 节点</string>
+    <string name="test_shown">测速列表中的节点</string>
+    <string name="stop">停止</string>
+    <string name="reset">恢复官方分配</string>
+    <string name="block_pcdn">屏蔽 PCDN（优先用正规节点）</string>
+    <string name="search_hint">搜索：域名 / 地区 / 运营商</string>
+    <string name="update_catalog">更新节点库</string>
+    <string name="add_custom">添加自定义节点</string>
+</resources>
