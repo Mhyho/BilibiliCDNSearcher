@@ -54,7 +54,14 @@ $env:JAVA_HOME = "C:\Program Files\Java\jdk-25.0.3"
 
 ## 数据来源与致谢
 
-- 节点库来自 [babywbx/BiliCDN](https://github.com/babywbx/BiliCDN)（MIT），该项目每周通过 DNS 与 HTTP 探测更新 B 站 CDN 节点目录。`app/src/main/assets/nodes.meta.json` 是其数据快照。
-- 播放器层改写地址、PCDN 判断的思路参考了哔哩漫游（BiliRoaming，GPL-3.0），本仓库代码为独立实现。
+- 节点库来自 [babywbx/BiliCDN](https://github.com/babywbx/BiliCDN)（MIT，Copyright (c) 2026 Babywbx），该项目每周通过 DNS 与 HTTP 探测更新 B 站 CDN 节点目录。`app/src/main/assets/nodes.meta.json` 是其数据快照。
+- 与框架通信使用 [libxposed/service](https://github.com/libxposed/service)（Apache-2.0）。
+- 播放器层改写地址、PCDN 判断的思路参考了哔哩漫游（BiliRoaming，GPL-3.0），本项目未使用其代码。
+
+第三方许可证全文见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+## 许可证
+
+本项目代码以 [MIT 许可证](LICENSE) 发布。
 
 仅供学习与个人使用。
